@@ -1,0 +1,105 @@
+{
+  "name": "Delivery Trip",
+  "module": "Delivery Management",
+  "doctype": "DocType",
+  "is_submittable": 1,
+  "naming_rule": "Expression",
+  "autoname": "format:DT-{YYYY}-{#####}",
+  "fields": [
+    {
+      "fieldname": "trip_date",
+      "fieldtype": "Date",
+      "label": "Trip Date",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "driver",
+      "fieldtype": "Link",
+      "options": "Employee",
+      "label": "Driver",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "helper",
+      "fieldtype": "Link",
+      "options": "Employee",
+      "label": "Helper"
+    },
+    {
+      "fieldname": "vehicle",
+      "fieldtype": "Link",
+      "options": "Vehicle",
+      "label": "Vehicle"
+    },
+    {
+      "fieldname": "route_zone",
+      "fieldtype": "Select",
+      "label": "Route Zone",
+      "options": "\nWattala\nMakola\nMalwana\nKadana\nHadala\nMahabage\nGongithota\nKohalvila\nSapugaskanda",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Draft\nIn Transit\nCompleted\nPartially Delivered",
+      "default": "Draft",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "section_stops",
+      "fieldtype": "Section Break",
+      "label": "Delivery Stops"
+    },
+    {
+      "fieldname": "stops",
+      "fieldtype": "Table",
+      "options": "Delivery Stop",
+      "label": "Stops"
+    },
+    {
+      "fieldname": "section_summary",
+      "fieldtype": "Section Break",
+      "label": "Summary"
+    },
+    {
+      "fieldname": "total_stops",
+      "fieldtype": "Int",
+      "label": "Total Stops",
+      "read_only": 1
+    },
+    {
+      "fieldname": "completed_stops",
+      "fieldtype": "Int",
+      "label": "Completed Stops",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_cash_collected",
+      "fieldtype": "Currency",
+      "label": "Total Cash Collected",
+      "read_only": 1
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "AAK Manager",
+      "read": 1, "write": 1, "create": 1, "delete": 1,
+      "submit": 1, "cancel": 1, "amend": 1
+    },
+    {
+      "role": "AAK Driver",
+      "read": 1, "write": 1
+    }
+  ],
+  "sort_field": "trip_date",
+  "sort_order": "DESC",
+  "track_changes": 1
+}

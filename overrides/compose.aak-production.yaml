@@ -1,0 +1,36 @@
+# Production compose override for AAK Agency
+# Usage:
+#   docker compose \
+#     -f compose.yaml \
+#     -f overrides/compose.mariadb.yaml \
+#     -f overrides/compose.redis.yaml \
+#     -f overrides/compose.traefik-ssl.yaml \
+#     -f overrides/compose.aak-production.yaml \
+#     up -d
+
+services:
+  backend:
+    environment:
+      # Increase worker pool for production t3.large
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-3}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-120}
+    # Pass AWS + notify.lk credentials into the app container
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.erpnext.rule=Host(`${FRAPPE_SITE_NAME_HEADER}`)"
+      - "traefik.http.routers.erpnext.entrypoints=websecure"
+      - "traefik.http.routers.erpnext.tls.certresolver=myresolver"
+      - "traefik.http.services.erpnext.loadbalancer.server.port=8080"
+
+  scheduler:
+    # Enable S3 backup job (runs via Frappe scheduler)
+    environment:
+      S3_BUCKET: ${S3_BUCKET}
+      AWS_REGION: ${AWS_REGION}

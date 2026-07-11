@@ -1,0 +1,74 @@
+{
+  "name": "AAK Settings",
+  "module": "AAK Agency",
+  "doctype": "DocType",
+  "issingle": 1,
+  "name": "AAK Settings",
+  "fields": [
+    {
+      "fieldname": "section_sms",
+      "fieldtype": "Section Break",
+      "label": "SMS (notify.lk)"
+    },
+    {
+      "fieldname": "notify_user_id",
+      "fieldtype": "Data",
+      "label": "Notify.lk User ID"
+    },
+    {
+      "fieldname": "notify_api_key",
+      "fieldtype": "Password",
+      "label": "Notify.lk API Key"
+    },
+    {
+      "fieldname": "notify_sender_id",
+      "fieldtype": "Data",
+      "label": "Sender ID",
+      "default": "AAKAgency"
+    },
+    {
+      "fieldname": "section_backup",
+      "fieldtype": "Section Break",
+      "label": "S3 Backup"
+    },
+    {
+      "fieldname": "s3_bucket",
+      "fieldtype": "Data",
+      "label": "S3 Bucket Name",
+      "default": "aak-erp-backups"
+    },
+    {
+      "fieldname": "aws_region",
+      "fieldtype": "Data",
+      "label": "AWS Region",
+      "default": "ap-south-1"
+    },
+    {
+      "fieldname": "section_credit",
+      "fieldtype": "Section Break",
+      "label": "Credit Defaults"
+    },
+    {
+      "fieldname": "default_credit_days",
+      "fieldtype": "Int",
+      "label": "Default Credit Days",
+      "default": 21
+    },
+    {
+      "fieldname": "default_credit_limit",
+      "fieldtype": "Currency",
+      "label": "Default Credit Limit (LKR)",
+      "default": 50000
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1, "write": 1
+    },
+    {
+      "role": "AAK Manager",
+      "read": 1, "write": 1
+    }
+  ]
+}

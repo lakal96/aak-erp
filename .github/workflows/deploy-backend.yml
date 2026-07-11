@@ -1,0 +1,73 @@
+name: Deploy Backend to Production
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/aak_agency/**'
+      - 'compose.yaml'
+      - 'overrides/**'
+      - '.env.production.example'
+      - 'apps.json'
+
+jobs:
+  deploy:
+    name: Deploy to AWS EC2
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Add EC2 to known hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        run: |
+          ssh ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+            set -euo pipefail
+            cd /opt/aak-erp
+
+            echo ">>> Pulling latest code..."
+            git pull origin main
+
+            echo ">>> Pulling latest Docker images..."
+            docker compose \
+              -f compose.yaml \
+              -f overrides/compose.mariadb.yaml \
+              -f overrides/compose.redis.yaml \
+              -f overrides/compose.traefik-ssl.yaml \
+              -f overrides/compose.aak-production.yaml \
+              pull
+
+            echo ">>> Restarting services..."
+            docker compose \
+              -f compose.yaml \
+              -f overrides/compose.mariadb.yaml \
+              -f overrides/compose.redis.yaml \
+              -f overrides/compose.traefik-ssl.yaml \
+              -f overrides/compose.aak-production.yaml \
+              up -d --remove-orphans
+
+            echo ">>> Running bench migrate..."
+            docker compose exec -T backend \
+              bench --site "$FRAPPE_SITE_NAME_HEADER" migrate
+
+            echo ">>> Restarting workers..."
+            docker compose restart queue-short queue-long scheduler
+
+            echo ">>> Deployment complete!"
+          EOF
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Deployment FAILED. Check the GitHub Actions log."
+          # Add Slack/email notification here if needed

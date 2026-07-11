@@ -1,0 +1,103 @@
+{
+  "name": "Cash Collection Entry",
+  "module": "Cash Collection",
+  "doctype": "DocType",
+  "is_submittable": 1,
+  "naming_rule": "Expression",
+  "autoname": "format:CCE-{YYYY}-{#####}",
+  "fields": [
+    {
+      "fieldname": "customer",
+      "fieldtype": "Link",
+      "options": "Customer",
+      "label": "Customer",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "customer_name",
+      "fieldtype": "Data",
+      "label": "Customer Name",
+      "fetch_from": "customer.customer_name",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "collection_date",
+      "fieldtype": "Date",
+      "label": "Collection Date",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "collected_by",
+      "fieldtype": "Link",
+      "options": "User",
+      "label": "Collected By",
+      "reqd": 1
+    },
+    {
+      "fieldname": "amount",
+      "fieldtype": "Currency",
+      "label": "Amount",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "payment_method",
+      "fieldtype": "Select",
+      "label": "Payment Method",
+      "options": "Cash\nCheque",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "col_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "cheque_number",
+      "fieldtype": "Data",
+      "label": "Cheque Number",
+      "depends_on": "eval:doc.payment_method == 'Cheque'"
+    },
+    {
+      "fieldname": "cheque_date",
+      "fieldtype": "Date",
+      "label": "Cheque Date",
+      "depends_on": "eval:doc.payment_method == 'Cheque'"
+    },
+    {
+      "fieldname": "bank_name",
+      "fieldtype": "Data",
+      "label": "Bank Name",
+      "depends_on": "eval:doc.payment_method == 'Cheque'"
+    },
+    {
+      "fieldname": "payment_entry",
+      "fieldtype": "Link",
+      "options": "Payment Entry",
+      "label": "Payment Entry",
+      "read_only": 1
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "AAK Manager",
+      "read": 1, "write": 1, "create": 1, "delete": 1,
+      "submit": 1, "cancel": 1, "amend": 1
+    },
+    {
+      "role": "AAK Collector",
+      "read": 1, "write": 1, "create": 1, "submit": 1
+    }
+  ],
+  "sort_field": "collection_date",
+  "sort_order": "DESC",
+  "track_changes": 1
+}

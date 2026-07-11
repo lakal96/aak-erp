@@ -1,5 +1,23 @@
-# Environment Variables
+# Environment Variables — NEVER commit these
 .env
+*.env
+!*.env.example
+!*.env.production.example
+
+# Terraform secrets
+infra/terraform/terraform.tfvars
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.backup
+infra/terraform/.terraform.lock.hcl
+
+# Mobile secrets
+mobile/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
 
 # mounted volume
 sites

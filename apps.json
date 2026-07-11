@@ -1,0 +1,11 @@
+[
+  {
+    "url": "https://github.com/frappe/erpnext.git",
+    "branch": "version-15"
+  },
+  {
+    "url": "https://github.com/lakal96/aak-erp.git",
+    "branch": "main",
+    "app_name": "aak_agency"
+  }
+]

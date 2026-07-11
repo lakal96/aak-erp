@@ -1,0 +1,80 @@
+{
+  "name": "Customer Credit Limit",
+  "module": "Credit Management",
+  "doctype": "DocType",
+  "naming_rule": "Expression",
+  "autoname": "format:CCL-{customer}",
+  "fields": [
+    {
+      "fieldname": "customer",
+      "fieldtype": "Link",
+      "options": "Customer",
+      "label": "Customer",
+      "reqd": 1,
+      "in_list_view": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "customer_name",
+      "fieldtype": "Data",
+      "label": "Customer Name",
+      "fetch_from": "customer.customer_name",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "credit_limit",
+      "fieldtype": "Currency",
+      "label": "Credit Limit (LKR)",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "credit_days",
+      "fieldtype": "Int",
+      "label": "Credit Days",
+      "default": 21
+    },
+    {
+      "fieldname": "outstanding_balance",
+      "fieldtype": "Currency",
+      "label": "Outstanding Balance",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "overdue_amount",
+      "fieldtype": "Currency",
+      "label": "Overdue Amount",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "last_payment_date",
+      "fieldtype": "Date",
+      "label": "Last Payment Date",
+      "read_only": 1
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Small Text",
+      "label": "Notes"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "AAK Manager",
+      "read": 1, "write": 1, "create": 1, "delete": 1
+    },
+    {
+      "role": "AAK Sales Rep",
+      "read": 1
+    },
+    {
+      "role": "AAK Collector",
+      "read": 1
+    }
+  ],
+  "sort_field": "overdue_amount",
+  "sort_order": "DESC"
+}

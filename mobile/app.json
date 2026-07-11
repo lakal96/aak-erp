@@ -1,0 +1,34 @@
+{
+  "name": "AAKMobile",
+  "slug": "aak-mobile",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "icon": "./assets/icon.png",
+  "userInterfaceStyle": "light",
+  "splash": {
+    "image": "./assets/splash.png",
+    "resizeMode": "contain",
+    "backgroundColor": "#1a56db"
+  },
+  "updates": {
+    "fallbackToCacheTimeout": 0
+  },
+  "assetBundlePatterns": ["**/*"],
+  "ios": {
+    "supportsTablet": false,
+    "bundleIdentifier": "lk.aakagency.mobile"
+  },
+  "android": {
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/adaptive-icon.png",
+      "backgroundColor": "#1a56db"
+    },
+    "package": "lk.aakagency.mobile"
+  },
+  "plugins": ["expo-secure-store"],
+  "extra": {
+    "eas": {
+      "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+    }
+  }
+}
