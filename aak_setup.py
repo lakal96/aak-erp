@@ -31,6 +31,7 @@ def run():
 
 # ─── 1. COMPANY SETUP ───────────────────────────────────────────────────────
 
+
 def _complete_setup_wizard():
     print("→ Setting up AAK Agency company...")
 
@@ -72,6 +73,7 @@ def _complete_setup_wizard():
 
 # ─── 2. WAREHOUSE TYPES ─────────────────────────────────────────────────────
 
+
 def _create_warehouse_types():
     print("→ Ensuring warehouse types exist...")
     for wt in ["Stores", "Transit", "Virtual"]:
@@ -87,18 +89,27 @@ def _create_warehouse_types():
 
 # ─── 3. WAREHOUSES ───────────────────────────────────────────────────────────
 
+
 def _create_warehouses():
     print("→ Creating warehouses...")
 
     warehouses = [
-        {"warehouse_name": "AAK Main Warehouse",  "warehouse_type": "Stores",   "is_group": 0},
-        {"warehouse_name": "Damaged Goods",        "warehouse_type": "Stores",   "is_group": 0},
-        {"warehouse_name": "CBL Returns Staging",  "warehouse_type": "Transit",  "is_group": 0},
-        {"warehouse_name": "Van 01",               "warehouse_type": "Transit",  "is_group": 0},
-        {"warehouse_name": "Van 02",               "warehouse_type": "Transit",  "is_group": 0},
-        {"warehouse_name": "Van 03",               "warehouse_type": "Transit",  "is_group": 0},
-        {"warehouse_name": "Van 04",               "warehouse_type": "Transit",  "is_group": 0},
-        {"warehouse_name": "Van 05",               "warehouse_type": "Transit",  "is_group": 0},
+        {
+            "warehouse_name": "AAK Main Warehouse",
+            "warehouse_type": "Stores",
+            "is_group": 0,
+        },
+        {"warehouse_name": "Damaged Goods", "warehouse_type": "Stores", "is_group": 0},
+        {
+            "warehouse_name": "CBL Returns Staging",
+            "warehouse_type": "Transit",
+            "is_group": 0,
+        },
+        {"warehouse_name": "Van 01", "warehouse_type": "Transit", "is_group": 0},
+        {"warehouse_name": "Van 02", "warehouse_type": "Transit", "is_group": 0},
+        {"warehouse_name": "Van 03", "warehouse_type": "Transit", "is_group": 0},
+        {"warehouse_name": "Van 04", "warehouse_type": "Transit", "is_group": 0},
+        {"warehouse_name": "Van 05", "warehouse_type": "Transit", "is_group": 0},
     ]
 
     company = "AAK Agency"
@@ -119,6 +130,7 @@ def _create_warehouses():
 
 
 # ─── 4. PAYMENT TERMS ────────────────────────────────────────────────────────
+
 
 def _create_payment_terms():
     print("→ Creating payment terms...")
@@ -160,18 +172,23 @@ def _create_payment_terms():
             print(f"  — Payment Term '{pt_name}' already exists.")
 
         # Create the Payment Terms Template (applied to customers/invoices)
-        existing = frappe.db.get_value("Payment Terms Template", {"template_name": pt_name}, "name")
+        existing = frappe.db.get_value(
+            "Payment Terms Template", {"template_name": pt_name}, "name"
+        )
         if existing:
             print(f"  — Payment Terms Template '{pt_name}' already exists.")
             continue
         ptt = frappe.new_doc("Payment Terms Template")
         ptt.template_name = pt_name
-        ptt.append("terms", {
-            "payment_term": pt_name,
-            "invoice_portion": 100,
-            "due_date_based_on": t["due_date_based_on"],
-            "credit_days": t["credit_days"],
-        })
+        ptt.append(
+            "terms",
+            {
+                "payment_term": pt_name,
+                "invoice_portion": 100,
+                "due_date_based_on": t["due_date_based_on"],
+                "credit_days": t["credit_days"],
+            },
+        )
         ptt.insert(ignore_permissions=True)
         print(f"  ✅ Created payment terms template: {pt_name}")
 
@@ -179,6 +196,7 @@ def _create_payment_terms():
 
 
 # ─── 5. TAX TEMPLATES ────────────────────────────────────────────────────────
+
 
 def _create_tax_templates():
     print("→ Creating tax templates...")
@@ -189,21 +207,19 @@ def _create_tax_templates():
     vat_output_account = frappe.db.get_value(
         "Account",
         {"account_name": ["like", "%VAT%"], "company": company, "account_type": "Tax"},
-        "name"
+        "name",
     )
 
     if not vat_output_account:
         # Create VAT account under Duties and Taxes
         parent = frappe.db.get_value(
-            "Account",
-            {"account_name": "Duties and Taxes", "company": company},
-            "name"
+            "Account", {"account_name": "Duties and Taxes", "company": company}, "name"
         )
         if not parent:
             parent = frappe.db.get_value(
                 "Account",
                 {"root_type": "Liability", "is_group": 1, "company": company},
-                "name"
+                "name",
             )
 
         vat_output_account = f"VAT 18% - AAK"
@@ -223,12 +239,15 @@ def _create_tax_templates():
         st = frappe.new_doc("Sales Taxes and Charges Template")
         st.title = template_name
         st.company = company
-        st.append("taxes", {
-            "charge_type": "On Net Total",
-            "account_head": vat_output_account,
-            "description": "VAT @ 18%",
-            "rate": 18,
-        })
+        st.append(
+            "taxes",
+            {
+                "charge_type": "On Net Total",
+                "account_head": vat_output_account,
+                "description": "VAT @ 18%",
+                "rate": 18,
+            },
+        )
         st.insert(ignore_permissions=True)
         print(f"  ✅ Created sales tax template: {full_name}")
     else:
@@ -241,12 +260,15 @@ def _create_tax_templates():
         pt = frappe.new_doc("Purchase Taxes and Charges Template")
         pt.title = purchase_template_name
         pt.company = company
-        pt.append("taxes", {
-            "charge_type": "On Net Total",
-            "account_head": vat_output_account,
-            "description": "VAT Input @ 18%",
-            "rate": 18,
-        })
+        pt.append(
+            "taxes",
+            {
+                "charge_type": "On Net Total",
+                "account_head": vat_output_account,
+                "description": "VAT Input @ 18%",
+                "rate": 18,
+            },
+        )
         pt.insert(ignore_permissions=True)
         print(f"  ✅ Created purchase tax template: {purchase_full_name}")
     else:
@@ -256,6 +278,7 @@ def _create_tax_templates():
 
 
 # ─── 6. ITEM GROUPS ──────────────────────────────────────────────────────────
+
 
 def _create_item_groups():
     print("→ Creating item groups...")
@@ -269,12 +292,36 @@ def _create_item_groups():
         print("  ✅ Created root: All Item Groups")
 
     groups = [
-        {"item_group_name": "CBL Products",        "parent_item_group": "All Item Groups", "is_group": 1},
-        {"item_group_name": "CBL Chocolates",       "parent_item_group": "CBL Products",    "is_group": 0},
-        {"item_group_name": "CBL Biscuits",         "parent_item_group": "CBL Products",    "is_group": 0},
-        {"item_group_name": "CBL Wafers",           "parent_item_group": "CBL Products",    "is_group": 0},
-        {"item_group_name": "CBL Confectionery",    "parent_item_group": "CBL Products",    "is_group": 0},
-        {"item_group_name": "CBL Other",            "parent_item_group": "CBL Products",    "is_group": 0},
+        {
+            "item_group_name": "CBL Products",
+            "parent_item_group": "All Item Groups",
+            "is_group": 1,
+        },
+        {
+            "item_group_name": "CBL Chocolates",
+            "parent_item_group": "CBL Products",
+            "is_group": 0,
+        },
+        {
+            "item_group_name": "CBL Biscuits",
+            "parent_item_group": "CBL Products",
+            "is_group": 0,
+        },
+        {
+            "item_group_name": "CBL Wafers",
+            "parent_item_group": "CBL Products",
+            "is_group": 0,
+        },
+        {
+            "item_group_name": "CBL Confectionery",
+            "parent_item_group": "CBL Products",
+            "is_group": 0,
+        },
+        {
+            "item_group_name": "CBL Other",
+            "parent_item_group": "CBL Products",
+            "is_group": 0,
+        },
     ]
 
     for g in groups:
@@ -292,6 +339,7 @@ def _create_item_groups():
 
 
 # ─── 7. TERRITORIES ──────────────────────────────────────────────────────────
+
 
 def _create_territories():
     print("→ Creating delivery territories (routes)...")
@@ -340,6 +388,7 @@ def _create_territories():
 
 # ─── 8. UNITS OF MEASURE ─────────────────────────────────────────────────────
 
+
 def _create_uom():
     print("→ Creating units of measure...")
 
@@ -359,16 +408,17 @@ def _create_uom():
 
 # ─── 9. ROLES ────────────────────────────────────────────────────────────────
 
+
 def _create_roles():
     print("→ Creating AAK custom roles...")
 
     roles = [
-        {"role_name": "AAK Sales Rep",       "desk_access": 1},
-        {"role_name": "AAK Driver",          "desk_access": 0},
-        {"role_name": "AAK Cash Collector",  "desk_access": 1},
-        {"role_name": "AAK Storekeeper",     "desk_access": 1},
-        {"role_name": "AAK Office Admin",    "desk_access": 1},
-        {"role_name": "AAK Owner",           "desk_access": 1},
+        {"role_name": "AAK Sales Rep", "desk_access": 1},
+        {"role_name": "AAK Driver", "desk_access": 0},
+        {"role_name": "AAK Cash Collector", "desk_access": 1},
+        {"role_name": "AAK Storekeeper", "desk_access": 1},
+        {"role_name": "AAK Office Admin", "desk_access": 1},
+        {"role_name": "AAK Owner", "desk_access": 1},
     ]
 
     for r in roles:

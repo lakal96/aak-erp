@@ -63,11 +63,13 @@
   "permissions": [
     {
       "role": "System Manager",
-      "read": 1, "write": 1
+      "read": 1,
+      "write": 1
     },
     {
       "role": "AAK Manager",
-      "read": 1, "write": 1
+      "read": 1,
+      "write": 1
     }
   ]
 }
