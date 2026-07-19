@@ -4,9 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'apps/aak_agency/**'
-      - 'images/aak/**'
-      - 'apps.json'
+      - "apps/aak_agency/**"
+      - "images/aak/**"
+      - "apps.json"
   workflow_dispatch:
 
 env:
@@ -56,4 +56,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            ERPNEXT_VERSION=v15.66.4
+            ERPNEXT_VERSION=v15.117.0

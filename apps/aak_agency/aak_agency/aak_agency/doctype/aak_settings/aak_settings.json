@@ -3,7 +3,6 @@
   "module": "AAK Agency",
   "doctype": "DocType",
   "issingle": 1,
-  "name": "AAK Settings",
   "fields": [
     {
       "fieldname": "section_sms",
@@ -64,11 +63,13 @@
   "permissions": [
     {
       "role": "System Manager",
-      "read": 1, "write": 1
+      "read": 1,
+      "write": 1
     },
     {
       "role": "AAK Manager",
-      "read": 1, "write": 1
+      "read": 1,
+      "write": 1
     }
   ]
 }

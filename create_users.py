@@ -1,8 +1,9 @@
 import frappe
 
+
 def run():
     """Create all AAK Agency staff user accounts with proper roles."""
-    
+
     USERS = [
         {
             "email": "owner@aak.lk",
@@ -73,7 +74,7 @@ def run():
     ]
 
     frappe.set_user("Administrator")
-    
+
     for u in USERS:
         if frappe.db.exists("User", u["email"]):
             print(f"User already exists: {u['email']}")
@@ -87,16 +88,17 @@ def run():
         user.send_welcome_email = 0
         user.mobile_no = u.get("mobile_no", "")
         user.user_type = "System User"
-        
+
         for role_name in u["roles"]:
             user.append("roles", {"role": role_name})
-        
+
         user.insert(ignore_permissions=True)
-        
+
         # Set password
         from frappe.utils.password import update_password
+
         update_password(u["email"], u["password"])
-        
+
         print(f"Created: {u['email']} ({u['roles'][0]})")
 
     # Create Sales Reps in CRM if not exists
@@ -107,12 +109,30 @@ def run():
 
 
 def _create_sales_reps():
+    # ERPNext creates this root Sales Person during the setup wizard, which we
+    # skip — so make sure it exists before assigning reps under it.
+    if not frappe.db.exists("Sales Person", "Sales Team"):
+        root = frappe.new_doc("Sales Person")
+        root.sales_person_name = "Sales Team"
+        root.is_group = 1
+        root.enabled = 1
+        root.insert(ignore_permissions=True)
+        print("Created root Sales Person: Sales Team")
+
     reps = [
-        {"sales_person_name": "Nimal Fernando", "territory": "Wattala", "employee": None},
-        {"sales_person_name": "Saman Wickrama",  "territory": "Makola",  "employee": None},
-        {"sales_person_name": "Dilani Silva",    "territory": None,      "employee": None},
+        {
+            "sales_person_name": "Nimal Fernando",
+            "territory": "Wattala",
+            "employee": None,
+        },
+        {
+            "sales_person_name": "Saman Wickrama",
+            "territory": "Makola",
+            "employee": None,
+        },
+        {"sales_person_name": "Dilani Silva", "territory": None, "employee": None},
     ]
-    
+
     for rep in reps:
         if not frappe.db.exists("Sales Person", rep["sales_person_name"]):
             sp = frappe.new_doc("Sales Person")

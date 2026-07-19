@@ -1,7 +1,9 @@
 app_name = "aak_agency"
 app_title = "AAK Agency"
 app_publisher = "lakal96"
-app_description = "CBL Chocolate Distribution ERP — Delivery, Collections & Credit Management"
+app_description = (
+    "CBL Chocolate Distribution ERP — Delivery, Collections & Credit Management"
+)
 app_email = "kapila@aakagency.lk"
 app_license = "MIT"
 app_version = "0.1.0"
@@ -50,7 +52,20 @@ fixtures = [
     },
     {
         "doctype": "Role",
-        "filters": [["name", "in", ["AAK Driver", "AAK Sales Rep", "AAK Collector", "AAK Manager"]]],
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "AAK Sales Rep",
+                    "AAK Driver",
+                    "AAK Cash Collector",
+                    "AAK Storekeeper",
+                    "AAK Office Admin",
+                    "AAK Owner",
+                ],
+            ]
+        ],
     },
 ]
 
