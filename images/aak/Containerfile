@@ -1,22 +1,29 @@
 # Custom production image — ERPNext v15 + aak_agency app
-# Build: docker build -f images/custom/Containerfile -t ghcr.io/lakal96/aak-erp:latest .
+# Build: docker build -f images/aak/Containerfile -t ghcr.io/lakal96/aak-erp:latest .
 # Based on official frappe_docker custom image pattern.
+# NOTE: frappe/erpnext is published on Docker Hub, not ghcr.io.
 
-ARG ERPNEXT_VERSION=v15.66.4
-FROM ghcr.io/frappe/erpnext:${ERPNEXT_VERSION}
+ARG ERPNEXT_VERSION=v15.117.0
+FROM docker.io/frappe/erpnext:${ERPNEXT_VERSION}
 
 USER root
 
 # Copy the custom app into the image
 COPY apps/aak_agency /home/frappe/frappe-bench/apps/aak_agency
 
-# Install Python dependencies for the custom app
+# Install the app as an editable Python package so `import aak_agency` works,
+# then install its extra Python dependencies.
 RUN cd /home/frappe/frappe-bench && \
     /home/frappe/frappe-bench/env/bin/pip install \
       --no-cache-dir \
-      -r apps/aak_agency/requirements.txt
+      -e apps/aak_agency
 
-# Register app in bench apps list
-RUN echo "aak_agency" >> /home/frappe/frappe-bench/sites/apps.txt || true
+# Register app in bench apps list (used by asset build / app registry)
+RUN grep -qxF "aak_agency" /home/frappe/frappe-bench/sites/apps.txt || \
+    echo "aak_agency" >> /home/frappe/frappe-bench/sites/apps.txt
+
+RUN chown -R frappe:frappe /home/frappe/frappe-bench/apps/aak_agency
+
+USER frappe
 
 USER frappe

@@ -3,7 +3,6 @@
   "module": "AAK Agency",
   "doctype": "DocType",
   "issingle": 1,
-  "name": "AAK Settings",
   "fields": [
     {
       "fieldname": "section_sms",

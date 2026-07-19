@@ -50,7 +50,14 @@ fixtures = [
     },
     {
         "doctype": "Role",
-        "filters": [["name", "in", ["AAK Driver", "AAK Sales Rep", "AAK Collector", "AAK Manager"]]],
+        "filters": [["name", "in", [
+            "AAK Sales Rep",
+            "AAK Driver",
+            "AAK Cash Collector",
+            "AAK Storekeeper",
+            "AAK Office Admin",
+            "AAK Owner",
+        ]]],
     },
 ]
 

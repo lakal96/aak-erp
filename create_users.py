@@ -107,6 +107,16 @@ def run():
 
 
 def _create_sales_reps():
+    # ERPNext creates this root Sales Person during the setup wizard, which we
+    # skip — so make sure it exists before assigning reps under it.
+    if not frappe.db.exists("Sales Person", "Sales Team"):
+        root = frappe.new_doc("Sales Person")
+        root.sales_person_name = "Sales Team"
+        root.is_group = 1
+        root.enabled = 1
+        root.insert(ignore_permissions=True)
+        print("Created root Sales Person: Sales Team")
+
     reps = [
         {"sales_person_name": "Nimal Fernando", "territory": "Wattala", "employee": None},
         {"sales_person_name": "Saman Wickrama",  "territory": "Makola",  "employee": None},

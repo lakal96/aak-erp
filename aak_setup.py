@@ -14,8 +14,8 @@ def run():
     print("  AAK Agency — ERPNext Configuration")
     print("========================================\n")
 
-    _complete_setup_wizard()
     _create_warehouse_types()
+    _complete_setup_wizard()
     _create_warehouses()
     _create_payment_terms()
     _create_tax_templates()
